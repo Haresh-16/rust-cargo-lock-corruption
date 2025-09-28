@@ -1,0 +1,11 @@
+services:
+  rust-build:
+    build: .
+    container_name: ${T_BENCH_TASK_DOCKER_CLIENT_CONTAINER_NAME}
+    networks:
+      - buildnet
+    working_dir: /app
+
+networks:
+  buildnet:
+    driver: bridge

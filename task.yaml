@@ -1,0 +1,64 @@
+instruction: |-
+  You need to fix a corrupted Rust project that's failing to build due to dependency conflicts and a corrupted Cargo.lock file. This is a common scenario in CI/CD pipelines where partial dependency updates or interrupted builds leave the project in an inconsistent state.
+
+  The Problem
+  -----------
+  A Rust microservice for processing financial transactions has multiple build failures:
+  - Cargo.lock file contains conflicting dependency versions
+  - Some dependencies have been yanked from crates.io but are still referenced
+  - Version conflicts between tokio ecosystem crates
+  - Missing features required by dependent crates
+  - Incompatible MSRV (Minimum Supported Rust Version) requirements
+
+  What You Have
+  -------------
+  - A Rust project with corrupted Cargo.toml and Cargo.lock files
+  - Source code that compiles with correct dependencies
+  - A requirements.txt file specifying the exact working dependency versions
+  - Standard Rust toolchain (cargo, rustc)
+  - Access to crates.io registry
+
+  Your Mission
+  ------------
+  1. Analyze and fix the corrupted Cargo.lock file
+  2. Resolve all dependency version conflicts in Cargo.toml
+  3. Update yanked dependencies to their replacement versions
+  4. Ensure all required features are enabled for dependencies
+  5. Verify MSRV compatibility across all dependencies
+  6. Successfully build the project with `cargo build --release`
+  7. Run the test suite with `cargo test` (all tests must pass)
+  8. Generate a clean Cargo.lock with `cargo update`
+
+  The final solution must be idempotent - running your fix multiple times should not introduce additional changes or conflicts.
+
+requirements: |-
+  After your solution:
+  - `cargo build --release` succeeds without warnings
+  - `cargo test` passes all tests (at least 3 test cases)
+  - `cargo check` reports no issues
+  - Cargo.lock contains exactly the versions specified in requirements.txt
+  - No yanked crates remain in dependencies
+  - All tokio ecosystem crates use compatible versions (1.35+ family)
+  - serde features include "derive" capability
+  - uuid crate has "v4" feature enabled
+  - MSRV is set to 1.70.0 and all dependencies respect this
+  - No duplicate dependency entries in Cargo.toml
+  - Solution is idempotent (no changes on re-run)
+
+acceptance: |-
+  Success is measured by clean compilation, passing tests, and dependency consistency. The build must be reproducible and work in CI environments.
+
+
+difficulty: hard
+category: build-systems
+tags: [rust, cargo, dependencies, build-fix, lockfile]
+working_dir: /app
+test_command: bash /app/run-tests.sh
+parser_name: pytest
+max_agent_timeout_sec: 600.0
+max_test_timeout_sec: 120.0
+run_tests_in_same_shell: false
+disable_asciinema: true
+estimated_duration_sec: 1800
+expert_time_estimate_min: 30
+junior_time_estimate_min: 60
